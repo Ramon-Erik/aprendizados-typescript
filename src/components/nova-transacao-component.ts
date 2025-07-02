@@ -32,6 +32,6 @@ elementoFormulario.addEventListener("submit", function(event) {
         console.log(novaTransacao);
         elementoFormulario.reset();
     } catch (error) {
-        alert("Transferencia inválida!")
+        alert(error)
     }
 }); 
