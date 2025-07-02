@@ -35,7 +35,7 @@ const Conta = {
     ) {
       debitar(novaTransacao.valor)
     } else {
-      throw new Error("Transação é inválido!");
+      throw new Error("Transação inválida!");
     }
   },
 };
