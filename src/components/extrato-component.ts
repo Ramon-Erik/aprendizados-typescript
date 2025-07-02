@@ -24,8 +24,8 @@ function renderizarExtrato(): void {
     htmlRegistroTransacoes += `<div class="transacoes-group"><strong class="mes-group">${grupoTransacao.label}</strong>${htmlTransacaoItem}</div>`
   }
 
-  if (htmlRegistroTransacoes === null) {
-    htmlRegistroTransacoes = "`<div>Nada de extrato</div>"
+  if (htmlRegistroTransacoes === "") {
+    htmlRegistroTransacoes = "<div>Nada de extrato</div>"
   }
   elementoRegistroTransacoesExtrato.innerHTML = htmlRegistroTransacoes
 }
