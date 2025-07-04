@@ -1,6 +1,6 @@
+import SaldoComponent from "./saldo-component.js";
 import Conta from "../types/Conta.js";
-import ExtratoCompnent from "./extrato-component.js";
-import SaldoComponent from "./saldo-componente.js";
+import ExtratoComponent from "./extrato-component.js";
 const elementoFormulario = document.querySelector(".block-nova-transacao form");
 elementoFormulario.addEventListener("submit", function (event) {
     try {
@@ -12,21 +12,20 @@ elementoFormulario.addEventListener("submit", function (event) {
         const inputTipoTransacao = elementoFormulario.querySelector("#tipoTransacao");
         const inputValor = elementoFormulario.querySelector("#valor");
         const inputData = elementoFormulario.querySelector("#data");
-        let tipoTransacao = inputTipoTransacao.value; // assim, a string que vem precisa ser uma dentro de tipo transação
+        let tipoTransacao = inputTipoTransacao.value;
         let valor = inputValor.valueAsNumber;
         let data = new Date(inputData.value + " 00:00:00");
         const novaTransacao = {
-            tipo: tipoTransacao,
+            tipoTransacao: tipoTransacao,
             valor: valor,
-            data: data
+            data: data,
         };
         Conta.registrarTransacao(novaTransacao);
         SaldoComponent.atualizar();
-        ExtratoCompnent.atualizar();
-        console.log(novaTransacao);
+        ExtratoComponent.atualizar();
         elementoFormulario.reset();
     }
-    catch (error) {
-        alert(error);
+    catch (erro) {
+        alert(erro.message);
     }
 });

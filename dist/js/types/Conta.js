@@ -1,5 +1,5 @@
 import { TipoTransacao } from "./TipoTransacao.js";
-let saldo = parseFloat(localStorage.getItem("saldo")) || 0;
+let saldo = JSON.parse(localStorage.getItem("saldo")) || 0;
 const transacoes = JSON.parse(localStorage.getItem("transacoes"), (key, value) => {
     if (key === "data") {
         return new Date(value);
@@ -8,17 +8,17 @@ const transacoes = JSON.parse(localStorage.getItem("transacoes"), (key, value) =
 }) || [];
 function debitar(valor) {
     if (valor <= 0) {
-        throw new Error("O valor a ser debtado deve ser maior que 0");
+        throw new Error("O valor a ser debitado deve ser maior que zero!");
     }
-    if (valor >= saldo) {
-        throw new Error("Saldo insuficiente");
+    if (valor > saldo) {
+        throw new Error("Saldo insuficiente!");
     }
     saldo -= valor;
-    localStorage.setItem("saldo", String(saldo));
+    localStorage.setItem("saldo", saldo.toString());
 }
 function depositar(valor) {
     if (valor <= 0) {
-        throw new Error("O valor a ser debtado deve ser maior que 0");
+        throw new Error("O valor a ser depositado deve ser maior que zero!");
     }
     saldo += valor;
     localStorage.setItem("saldo", saldo.toString());
@@ -33,36 +33,35 @@ const Conta = {
     getGruposTransacoes() {
         const gruposTransacoes = [];
         const listaTransacoes = structuredClone(transacoes);
-        const transacoesOrdenadas = listaTransacoes.sort((t1, t2) => t2.data.getTime() - t2.data.getTime());
-        let labelGrupoTransacoes = "";
-        for (let t of transacoesOrdenadas) {
-            let label = t.data.toLocaleDateString("pt-br", { month: "long", year: "numeric" });
-            if (label != labelGrupoTransacoes) {
-                labelGrupoTransacoes = label;
+        const transacoesOrdenadas = listaTransacoes.sort((t1, t2) => t2.data.getTime() - t1.data.getTime());
+        let labelAtualGrupoTransacao = "";
+        for (let transacao of transacoesOrdenadas) {
+            let labelGrupoTransacao = transacao.data.toLocaleDateString("pt-br", { month: "long", year: "numeric" });
+            if (labelAtualGrupoTransacao !== labelGrupoTransacao) {
+                labelAtualGrupoTransacao = labelGrupoTransacao;
                 gruposTransacoes.push({
-                    label: labelGrupoTransacoes,
+                    label: labelGrupoTransacao,
                     transacoes: []
                 });
             }
-            gruposTransacoes.at(-1).transacoes.push(t);
-            console.log("oi", gruposTransacoes);
+            gruposTransacoes.at(-1).transacoes.push(transacao);
         }
         return gruposTransacoes;
     },
     registrarTransacao(novaTransacao) {
-        if (novaTransacao.tipo == TipoTransacao.DEPOSITO) {
+        if (novaTransacao.tipoTransacao == TipoTransacao.DEPOSITO) {
             depositar(novaTransacao.valor);
         }
-        else if (novaTransacao.tipo == TipoTransacao.TRANSFERENCIA ||
-            novaTransacao.tipo == TipoTransacao.PAGAMENTO_BOLETO) {
+        else if (novaTransacao.tipoTransacao == TipoTransacao.TRANSFERENCIA || novaTransacao.tipoTransacao == TipoTransacao.PAGAMENTO_BOLETO) {
             debitar(novaTransacao.valor);
+            novaTransacao.valor *= -1;
         }
         else {
-            throw new Error("Transação inválida!");
+            throw new Error("Tipo de Transação é inválido!");
         }
         transacoes.push(novaTransacao);
         console.log(this.getGruposTransacoes());
         localStorage.setItem("transacoes", JSON.stringify(transacoes));
-    },
+    }
 };
 export default Conta;
