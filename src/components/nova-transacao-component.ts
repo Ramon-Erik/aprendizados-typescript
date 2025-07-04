@@ -19,7 +19,7 @@ elementoFormulario.addEventListener("submit", function(event) {
         
         let tipoTransacao: TipoTransacao = inputTipoTransacao.value as TipoTransacao; // assim, a string que vem precisa ser uma dentro de tipo transação
         let valor: number = inputValor.valueAsNumber;
-        let data: Date = new Date(inputData.value);
+        let data: Date = new Date(inputData.value + " 00:00:00");
     
         const novaTransacao: Transacao = {
             tipo: tipoTransacao,
